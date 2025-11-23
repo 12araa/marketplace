@@ -16,6 +16,9 @@ class Order extends Model
         "user_id",
         "total_price",
         "status",
+        "shipping_name",
+        "shipping_address",
+        "shipping_phone",
     ];
 
     /**
@@ -32,5 +35,19 @@ class Order extends Model
     public function items(): HasMany
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function scopePending($query)
+    {
+        return $query->where('status', 'Pending');
+    }
+
+    public function scopeCompleted($query)
+    {
+        return $query->where('status', 'Completed');
+    }
+    public function scopeShipped($query)
+    {
+        return $query->where('status', 'Shipped');
     }
 }

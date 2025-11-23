@@ -9,68 +9,60 @@ use Illuminate\Auth\Access\Response;
 class ProductPolicy
 {
     /**
-     * PENTING: Fungsi ini memberikan hak akses penuh (Super Admin)
-     * ke user dengan role 'admin'. Admin akan otomatis lolos
-     * semua cek policy di bawah ini.
+     * Admin tetap lolos (tidak perlu cek status verifikasi)
      */
     public function before(User $user, string $ability): bool|null
     {
         if ($user->role === 'admin') {
             return true;
         }
-        return null; // Biarkan policy method di bawah yang memutuskan
+        return null;
     }
 
     /**
-     * Menentukan apakah user boleh MELIHAT DAFTAR produk.
-     * (Dipakai oleh controller method 'index')
+     * Boleh lihat daftar produk?
      */
     public function viewAny(User $user): bool
     {
-        // Customer tidak boleh lihat, hanya Vendor dan Admin
-        return $user->role === 'vendor';
-        // (Admin sudah otomatis lolos karena ada 'before')
+        // YA, jika dia vendor DAN statusnya approved
+        return $user->role === 'vendor' && $user->vendorProfile?->verification_status === 'approved';
     }
 
     /**
-     * Menentukan apakah user boleh MELIHAT DETAIL produk.
-     * (Dipakai oleh 'show')
+     * Boleh lihat detail produk?
      */
     public function view(User $user, Product $product): bool
     {
-        // Boleh lihat jika dia adalah vendor pemilik produk ini
-        return $user->id === $product->vendor_id;
+        // YA, jika dia pemilik DAN statusnya approved
+        return $user->id === $product->vendor_id && $user->vendorProfile?->verification_status === 'approved';
     }
 
     /**
-     * Menentukan apakah user boleh MEMBUAT produk.
-     * (Dipakai oleh 'create' dan 'store')
+     * Boleh buat produk?
      */
     public function create(User $user): bool
     {
-        // Hanya vendor yang boleh membuat produk baru
-        return $user->role === 'vendor';
+        // YA, jika dia vendor DAN statusnya approved
+        return $user->role === 'vendor' && $user->vendorProfile?->verification_status === 'approved';
     }
 
     /**
-     * Menentukan apakah user boleh MENG-UPDATE produk.
-     * (Dipakai oleh 'edit' dan 'update')
+     * Boleh update produk?
      */
     public function update(User $user, Product $product): bool
     {
-        // Boleh update jika dia adalah vendor pemilik produk ini
-        return $user->id === $product->vendor_id;
+        // YA, jika dia pemilik DAN statusnya approved
+        return $user->id === $product->vendor_id && $user->vendorProfile?->verification_status === 'approved';
     }
 
     /**
-     * Menentukan apakah user boleh MENGHAPUS produk.
-     * (Dipakai oleh 'destroy')
+     * Boleh hapus produk?
      */
     public function delete(User $user, Product $product): bool
     {
-        // Boleh hapus jika dia adalah vendor pemilik produk ini
-        return $user->id === $product->vendor_id;
+        // YA, jika dia pemilik DAN statusnya approved
+        return $user->id === $product->vendor_id && $user->vendorProfile?->verification_status === 'approved';
     }
 
-    // ... (method restore dan forceDelete bisa Anda isi sama dengan 'delete')
+    // ... (method restore dan forceDelete)
 }

@@ -1,9 +1,3 @@
-{{--
-  File: resources/views/products/index.blade.php
-  Halaman ini menampilkan daftar semua produk (untuk Admin)
-  atau produk milik vendor (untuk Vendor).
---}}
-
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -23,7 +17,7 @@
                     @can('create', App\Models\Product::class)
                         <div class="mb-4">
                             <a href="{{ route('products.create') }}"
-                               class="px-4 py-2 bg-blue text-white rounded-md hover:bg-blue-700">
+                               class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700">
                                + Tambah Produk Baru
                             </a>
                         </div>
@@ -42,7 +36,6 @@
                                     <th class="py-2 px-4 border-b text-left">Gambar</th>
                                     <th class="py-2 px-4 border-b text-left">Nama Produk</th>
                                     <th class="py-2 px-4 border-b text-left">Kategori</th>
-                                    {{-- Kolom Vendor hanya relevan jika Admin yang lihat --}}
                                     @if(auth()->user()->role == 'admin')
                                         <th class="py-2 px-4 border-b text-left">Vendor</th>
                                     @endif
@@ -56,21 +49,12 @@
                                     <tr class="hover:bg-gray-50">
                                         <td class="py-2 px-4 border-b">
                                             @if($product->image_path)
-                                                {{--
-                                                  Storage::url() membuat URL publik ke file.
-                                                  Ini butuh 'storage:link'.
-                                                --}}
                                                 <img src="{{ Storage::url($product->image_path) }}" alt="{{ $product->name }}" class="h-16 w-16 object-cover rounded">
                                             @else
                                                 <span class="text-gray-400 text-xs">No Image</span>
                                             @endif
                                         </td>
                                         <td class="py-2 px-4 border-b">{{ $product->name }}</td>
-
-                                        {{--
-                                          Ini aman dari N+1 karena kita pakai
-                                          with(['category', 'vendor']) di controller.
-                                        --}}
                                         <td class="py-2 px-4 border-b">{{ $product->category->name ?? 'N/A' }}</td>
 
                                         @if(auth()->user()->role == 'admin')
@@ -92,8 +76,8 @@
                                             {{-- Cek apakah user boleh 'view' produk ini --}}
                                             @can('view', $product)
                                                 <a href="{{ route('products.show', $product) }}"
-                                                class="text-blue-600 hover:text-blue-800 hover:underline">
-                                                {{ $product->name }}
+                                                   class="text-blue-600 hover:text-blue-900 mr-2">
+                                                Show
                                             </a>
                                             @else
                                                 {{-- Jika tidak boleh (misal role aneh), tampilkan nama saja --}}

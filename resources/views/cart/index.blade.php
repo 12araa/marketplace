@@ -1,8 +1,3 @@
-{{--
-  File: resources/views/cart/index.blade.php
-  Halaman keranjang belanja customer.
---}}
-
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -78,10 +73,9 @@
                             </h3>
                             <form action="{{ route('order.store') }}" method="POST">
                                 @csrf
-                                <button type="submit"
-                                        class="inline-block mt-4 px-6 py-3 bg-green-600 text-white text-lg rounded-md hover:bg-green-700">
+                               <a href="{{ route('checkout.index') }}" class="inline-block mt-4 px-6 py-3 bg-green-600 text-white ...">
                                     Lanjut ke Checkout
-                                </button>
+                                </a>
                             </form>
                         </div>
                     @endif

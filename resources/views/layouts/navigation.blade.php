@@ -13,12 +13,6 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
-                    {{--
-                      ===============================================
-                       AWAL TAMBAHAN NAVIGASI BERBASIS ROLE
-                      ===============================================
-                    --}}
-
                     {{-- ===== UNTUK CUSTOMER ===== --}}
                     @if(auth()->user()->role == 'customer')
                         <x-nav-link :href="route('shop.index')" :active="request()->routeIs('shop.index')">
@@ -33,6 +27,9 @@
                     @if(auth()->user()->role == 'admin')
                         <x-nav-link :href="route('categories.index')" :active="request()->routeIs('categories.*')">
                             {{ __('Manage Categories') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('admin.vendors.index')" :active="request()->routeIs('admin.vendors.*')">
+                            {{ __('Verifikasi Vendor') }}
                         </x-nav-link>
                     @endif
 
@@ -49,10 +46,9 @@
                         </x-nav-link>
                     @endcan
 
-                    {{-- ===============================================
-                         AKHIR TAMBAHAN NAVIGASI
-                        =============================================== --}}
-
+                    <x-nav-link :href="route('orders.index')" :active="request()->routeIs('orders.index')">
+                        {{ __('Order Histories') }}
+                    </x-nav-link>
                 </div>
             </div>
 

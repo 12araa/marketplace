@@ -15,7 +15,7 @@ class OrderService
      * Logika inti untuk memproses checkout.
      * Mengambil semua data dari session cart dan menyimpannya ke database.
      */
-    public function processCheckout(User $user)
+    public function processCheckout(User $user, array $data)
     {
         // 1. Ambil data keranjang dari session
         $cartItems = session()->get('cart', []);
@@ -27,7 +27,7 @@ class OrderService
         // Mulai "Transaksi Database"
         // Ini memastikan jika ada 1 langkah gagal (misal stok habis),
         // semua proses akan dibatalkan (rollback).
-        return DB::transaction(function () use ($user, $cartItems) {
+        return DB::transaction(function () use ($user, $cartItems, $data) {
 
             // 2. Hitung total harga
             $totalPrice = 0;
@@ -39,7 +39,10 @@ class OrderService
             $order = Order::create([
                 'user_id'     => $user->id,
                 'total_price' => $totalPrice,
-                'status'      => 'Pending', // Status awal
+                'status'      => 'Pending',
+                'shipping_name'    => $data['shipping_name'],
+                'shipping_phone'   => $data['shipping_phone'],
+                'shipping_address' => $data['shipping_address'],
             ]);
 
             // 4. Looping & simpan "Anak" OrderItem (detail barang)

@@ -1,8 +1,3 @@
-{{--
-  File: resources/views/products/create.blade.php
-  Form untuk Vendor menambahkan produk baru.
---}}
-
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -15,7 +10,6 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
 
-                    {{-- MENAMPILKAN SEMUA ERROR VALIDASI DI ATAS --}}
                     @if ($errors->any())
                         <div class="mb-4 p-4 bg-red-100 text-red-700 border border-red-400 rounded">
                             <strong class="font-bold">Oops! Ada yang salah:</strong>
@@ -26,14 +20,8 @@
                             </ul>
                         </div>
                     @endif
-
-                    {{-- AWAL FORM --}}
-                    {{--
-                      PENTING: tambahkan enctype="multipart/form-data"
-                      Ini WAJIB agar form bisa mengirim file (upload gambar).
-                    --}}
-                    <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
-                        @csrf  {{-- Token Keamanan Laravel --}}
+                     <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
 
                         <div class="mb-4">
                             <label for="category_id" class="block text-sm font-medium text-gray-700">Kategori Produk</label>
@@ -41,7 +29,6 @@
                                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
                                 <option value="">--- Pilih Kategori ---</option>
 
-                                {{-- Loop ini mengambil data dari ProductController@create --}}
                                 @foreach ($categories as $category)
                                     <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
                                         {{ $category->name }}
@@ -124,13 +111,11 @@
 
                         <div class="flex items-center justify-end mt-4">
                             <button type="submit"
-                                    class="px-4 py-2 bg-blue-600 text-black rounded-md hover:bg-blue-700">
+                                    class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
                                 Simpan Produk
                             </button>
                         </div>
                     </form>
-                    {{-- AKHIR FORM --}}
-
                 </div>
             </div>
         </div>

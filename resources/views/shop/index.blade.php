@@ -1,8 +1,3 @@
-{{--
-  File: resources/views/shop/index.blade.php
-  Halaman "etalase" publik untuk customer.
---}}
-
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -26,8 +21,6 @@
 
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-
-                    {{-- Loop semua produk dari ShopController --}}
                     @forelse ($products as $product)
                         <div class="border border-gray-200 rounded-lg shadow-sm overflow-hidden">
                             <a href="#"> {{-- Nanti ini ke halaman detail produk --}}
@@ -47,17 +40,8 @@
                                 <p class="text-xl font-bold text-blue-600 mb-4">
                                     Rp {{ number_format($product->price, 0, ',', '.') }}
                                 </p>
-
-                                {{--
-                                  FORM "TAMBAH KE KERANJANG"
-                                  Ini akan mengirim data ke CartController@add
-                                --}}
                                 <form action="{{ route('cart.add', $product) }}" method="POST">
                                     @csrf
-                                    {{--
-                                      Kita bisa tambahkan input kuantitas di sini,
-                                      tapi untuk simpel, kita bisa default 1
-                                    --}}
                                     <input type="hidden" name="quantity" value="1">
 
                                     <button type="submit"

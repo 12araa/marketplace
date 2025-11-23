@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -43,4 +44,14 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function customerProfile()
+    {
+        return $this->hasOne(CustomerProfile::class);
+    }
+    public function vendorProfile()
+    {
+        return $this->hasOne(VendorProfile::class);
+    }
+
 }

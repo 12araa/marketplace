@@ -15,45 +15,50 @@ class DashboardController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $data = []; // Siapkan array untuk data
+        $data = [];
 
-        if ($user->role == 'customer') {
-            // Ambil 5 pesanan terakhir
-            $data['orders'] = Order::where('user_id', $user->id)
-                                    ->with('items.product') // Eager load
-                                    ->latest() // Urutkan dari yg terbaru
-                                    ->take(5)  // Ambil 5 saja
-                                    ->get();
-            // Nanti kita juga bisa tambahkan data Wishlist di sini
-            // $data['wishlist'] = ...
-        }
-
-        if ($user->role == 'vendor') {
-            $data['pendingOrders'] = Order::where('status', 'Pending')
-                ->whereHas('items.product', function ($query) use ($user) {
-                    $query->where('vendor_id', $user->id);
-                })
-                ->with('user', 'items.product') // Ambil data customer & produknya
-                ->latest()
-                ->get();
-
-            // Nanti kita bisa tambahkan statistik di sini
-            // $data['totalSales'] = ...
-        }
-
-        if ($user->role == 'admin') {
-            // Admin melihat SEMUA pesanan 'Pending'
-            $data['pendingOrders'] = Order::where('status', 'Pending')
-                                    ->with('user') // Ambil data customer
+        if ($user->role === 'admin') {
+            $data['pendingOrders'] = Order::pending()
+                                    ->with('user')
                                     ->latest()
                                     ->get();
-
-            // Nanti kita bisa tambahkan statistik total di sini
-            // $data['totalUsers'] = User::count();
+            // Tambahkan data lain untuk admin jika perlu
+            return view('dashboard', $data);
         }
 
-        // Kirim semua data yang terkumpul ke view 'dashboard'
-        return view('dashboard', $data);
+        if ($user->role === 'vendor') {
+            // Cek status verifikasi dari profil vendor
+            $status = $user->vendorProfile?->verification_status;
+
+            if ($status === 'approved') {
+                // VENDOR DISETUJUI -> Lihat pesanan masuk
+                $data['pendingOrders'] = Order::pending()
+                    ->whereHas('items.product', function ($query) use ($user) {
+                        $query->where('vendor_id', $user->id);
+                    })
+                    ->with('user', 'items.product')
+                    ->latest()
+                    ->get();
+            }
+
+            // Jika 'pending' atau 'rejected', $data['pendingOrders'] akan kosong,
+            // dan view dashboard akan menangani tampilannya (menampilkan alert).
+
+            return view('dashboard', $data);
+        }
+
+        if ($user->role === 'customer') {
+            $data['orders'] = Order::where('user_id', $user->id)
+                                    ->with('items.product')
+                                    ->latest()
+                                    ->take(5)
+                                    ->get();
+
+            return view('dashboard', $data);
+        }
+
+        // Default fallback (jika ada role aneh)
+        return view('dashboard');
     }
 
     /**
