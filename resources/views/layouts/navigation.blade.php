@@ -21,6 +21,9 @@
                         <x-nav-link :href="route('cart.index')" :active="request()->routeIs('cart.index')">
                             {{ __('My Cart') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('wishlist.index')" :active="request()->routeIs('wishlist.index')">
+                            {{ __('Wishlist') }}
+                        </x-nav-link>
                     @endif
 
                     {{-- ===== UNTUK ADMIN ===== --}}

@@ -22,8 +22,26 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     @forelse ($products as $product)
-                        <div class="border border-gray-200 rounded-lg shadow-sm overflow-hidden">
-                            <a href="#"> {{-- Nanti ini ke halaman detail produk --}}
+                        <div class="border border-gray-200 rounded-lg shadow-sm overflow-hidden relative">
+                            @auth
+                                <form action="{{ route('wishlist.toggle', $product) }}" method="POST" class="absolute top-2 right-2 z-10">
+                                    @csrf
+                                    <button type="submit" class="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition">
+                                        @if(auth()->user()->favorites->contains($product->id))
+                                            {{-- Ikon LOVE MERAH (Solid) --}}
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500 fill-current" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
+                                            </svg>
+                                        @else
+                                            {{-- Ikon LOVE ABU-ABU (Outline) --}}
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400 stroke-current fill-none" viewBox="0 0 24 24" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                            </svg>
+                                        @endif
+                                    </button>
+                                </form>
+                            @endauth
+                            <a href="#">
                                 @if ($product->image_path)
                                     <img src="{{ Storage::url($product->image_path) }}" alt="{{ $product->name }}"
                                          class="w-full h-48 object-cover">

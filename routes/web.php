@@ -9,6 +9,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\Admin\VendorController as AdminVendorController;
+use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -61,6 +62,8 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/orders/{order}/complete', [OrderController::class, 'markAsCompleted'])
          ->name('orders.complete');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+    Route::post('/wishlist/{product}', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
 });
 
 Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
