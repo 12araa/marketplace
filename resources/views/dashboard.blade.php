@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-xl text-gray-300 leading-tight">
             Dashboard
         </h2>
     </x-slot>
@@ -26,6 +26,32 @@
                 {{-- ===== TAMPILAN DASHBOARD UNTUK ADMIN ===== --}}
                 @if(auth()->user()->role == 'admin')
                     <div class="p-6 text-gray-900">
+
+                        <h3 class="text-lg font-semibold mb-4">Ringkasan Statistik</h3>
+
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
+                                <h4 class="text-sm font-semibold text-blue-600 uppercase">Total User</h4>
+                                <p class="text-3xl font-bold text-gray-800 mt-2">{{ number_format($totalUsers) }}</p>
+                            </div>
+
+                            <div class="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
+                                <h4 class="text-sm font-semibold text-green-600 uppercase">Total Produk</h4>
+                                <p class="text-3xl font-bold text-gray-800 mt-2">{{ number_format($totalProducts) }}</p>
+                            </div>
+
+                            <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 text-center">
+                                <h4 class="text-sm font-semibold text-purple-600 uppercase">Total Order</h4>
+                                <p class="text-3xl font-bold text-gray-800 mt-2">{{ number_format($totalOrders) }}</p>
+                            </div>
+
+                            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center">
+                                <h4 class="text-sm font-semibold text-yellow-600 uppercase">Pendapatan</h4>
+                                <p class="text-2xl font-bold text-gray-800 mt-2">Rp {{ number_format($totalRevenue / 1000000, 1) }}M</p>
+                                <span class="text-xs text-gray-500">(Pesanan Selesai)</span>
+                            </div>
+                        </div>
+
                         <h3 class="text-lg font-semibold mb-4">
                             Pesanan 'Pending' Terbaru
                         </h3>

@@ -18,11 +18,19 @@ class DashboardController extends Controller
         $data = [];
 
         if ($user->role === 'admin') {
+            // 1. Hitung Statistik
+            $data['totalUsers']    = \App\Models\User::count();
+            $data['totalProducts'] = Product::count();
+            $data['totalOrders']   = Order::count();
+            $data['totalRevenue']  = Order::where('status', 'Completed')->sum('total_price');
+
+            // 2. Pesanan Pending
             $data['pendingOrders'] = Order::pending()
                                     ->with('user')
                                     ->latest()
+                                    ->take(10)
                                     ->get();
-            // Tambahkan data lain untuk admin jika perlu
+
             return view('dashboard', $data);
         }
 
