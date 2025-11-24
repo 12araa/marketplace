@@ -41,7 +41,7 @@
                                     </button>
                                 </form>
                             @endauth
-                            <a href="#">
+                            <a href="{{ route('shop.show', $product) }}">
                                 @if ($product->image_path)
                                     <img src="{{ Storage::url($product->image_path) }}" alt="{{ $product->name }}"
                                          class="w-full h-48 object-cover">

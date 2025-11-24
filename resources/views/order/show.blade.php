@@ -92,6 +92,14 @@
                     </div>
                 </div>
 
+                @if($order->status == 'Completed')
+                    @foreach($order->items as $item)
+                        <a href="{{ route('shop.show', $item->product) }}" class="text-xm text-yellow-600 hover:underline block">
+                            ⭐ Review {{ $item->product->name }}
+                        </a>
+                    @endforeach
+                @endif
+
                 <div class="mt-8">
                     <a href="{{ route('orders.index') }}" class="text-blue-600 hover:underline">&larr; Kembali ke Riwayat</a>
                 </div>
